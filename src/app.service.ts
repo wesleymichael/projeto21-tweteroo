@@ -62,4 +62,15 @@ export class AppService {
 
     return response;
   }
+
+  getTweetsByUsername(username: string): TweetWithAvatar[] {
+    const user = this.users.find((userElem) => userElem.username === username);
+
+    const tweetsByUser = this.tweets
+      .filter((t) => t.username === username)
+      .map((t) => {
+        return new TweetWithAvatar(username, user.avatar, t.tweet);
+      });
+    return tweetsByUser;
+  }
 }

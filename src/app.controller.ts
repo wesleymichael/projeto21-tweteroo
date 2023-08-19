@@ -5,6 +5,7 @@ import {
   HttpCode,
   HttpException,
   HttpStatus,
+  Param,
   Post,
   Query,
 } from '@nestjs/common';
@@ -50,5 +51,10 @@ export class AppController {
       );
     }
     return this.appService.getTweets(page);
+  }
+
+  @Get('/tweets/:username')
+  getTweetsByUsername(@Param('username') username: string): TweetWithAvatar[] {
+    return this.appService.getTweetsByUsername(username);
   }
 }
