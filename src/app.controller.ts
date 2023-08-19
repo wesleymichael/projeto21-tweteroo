@@ -3,11 +3,13 @@ import {
   Controller,
   Get,
   HttpCode,
+  HttpException,
   HttpStatus,
   Post,
 } from '@nestjs/common';
 import { AppService } from './app.service';
 import { CreateUserDto } from './dtos/user.dto';
+import { CreateTweetDto } from './dtos/tweet.dto';
 
 @Controller()
 export class AppController {
@@ -24,7 +26,16 @@ export class AppController {
     try {
       return this.appService.createUser(body);
     } catch (error) {
-      return new Error(error);
+      throw new Error(error.message);
+    }
+  }
+
+  @Post('/tweets')
+  createTweet(@Body() body: CreateTweetDto) {
+    try {
+      return this.appService.createTweet(body);
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.UNAUTHORIZED);
     }
   }
 }
