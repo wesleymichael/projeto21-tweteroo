@@ -6,10 +6,12 @@ import {
   HttpException,
   HttpStatus,
   Post,
+  Query,
 } from '@nestjs/common';
 import { AppService } from './app.service';
 import { CreateUserDto } from './dtos/user.dto';
 import { CreateTweetDto } from './dtos/tweet.dto';
+import { TweetWithAvatar } from './entities/tweet.entity';
 
 @Controller()
 export class AppController {
@@ -37,5 +39,16 @@ export class AppController {
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.UNAUTHORIZED);
     }
+  }
+
+  @Get('/tweets')
+  getTweets(@Query('page') page: number = 1): TweetWithAvatar[] {
+    if (page < 1 || isNaN(page)) {
+      throw new HttpException(
+        'Informe uma página válida!',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    return this.appService.getTweets(page);
   }
 }

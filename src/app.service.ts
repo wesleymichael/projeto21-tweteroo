@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { User } from './entities/user.entity';
 import { CreateUserDto } from './dtos/user.dto';
 import { CreateTweetDto } from './dtos/tweet.dto';
-import { Tweet } from './entities/tweet.entity';
+import { Tweet, TweetWithAvatar } from './entities/tweet.entity';
 
 @Injectable()
 export class AppService {
@@ -41,5 +41,25 @@ export class AppService {
 
     const newTweet = new Tweet(username, tweet);
     return this.tweets.push(newTweet);
+  }
+
+  getTweets(page: number): TweetWithAvatar[] {
+    const maxTweets = 15;
+    const start = (page - 1) * maxTweets;
+    const end = start + maxTweets;
+
+    const tweetsCopy = this.tweets.slice();
+    tweetsCopy.reverse();
+    const tweetsPage = tweetsCopy.slice(start, end);
+
+    const response = tweetsPage.map((elem) => {
+      const { username, tweet } = elem;
+      const user = this.users.find(
+        (userElem) => userElem.username === username,
+      );
+      return new TweetWithAvatar(username, user.avatar, tweet);
+    });
+
+    return response;
   }
 }

@@ -10,4 +10,8 @@ export class User {
   get username() {
     return this._username;
   }
+
+  get avatar() {
+    return this._avatar;
+  }
 }
